@@ -1,0 +1,17 @@
+.clear-canvas-btn {
+  position: absolute;
+  left: 1570px;
+  top: 80px;
+  transform: translate(-50%, -50%);
+  background: #a4a4a4;
+  color: #000000;
+  padding: 1px 7px;
+  border: 0px;
+  border-radius: 10px;
+
+  &:hover {
+    background: #fbd2d2;
+    color: #ff5454;
+    cursor: pointer;
+  }
+}

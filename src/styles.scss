@@ -1,1 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+.container-custom {
+  margin: 0 40px;
+}
+
+.canvas {
+  width: 100%;
+  height: calc(100vh - 62px);
+  border:1px solid #000000;
+}
