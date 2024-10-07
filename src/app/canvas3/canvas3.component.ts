@@ -1,12 +1,13 @@
-import { isPlatformBrowser } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, inject, PLATFORM_ID, signal, viewChild } from '@angular/core';
-import {MatIconModule} from '@angular/material/icon';
+import { isPlatformBrowser, NgClass } from '@angular/common';
+import { AfterViewInit, Component, effect, ElementRef, inject, PLATFORM_ID, signal, untracked, viewChild } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 type toolType = 'free-hand' | 'circle' | 'rectangle' | 'straight_line' | 'curve_line';
 @Component({
   selector: 'app-canvas3',
   standalone: true,
-  imports: [MatIconModule],
+  imports: [MatIconModule, ColorPickerModule, NgClass],
   templateUrl: './canvas3.component.html',
   styleUrl: './canvas3.component.scss'
 })
@@ -18,7 +19,21 @@ export class Canvas3Component implements AfterViewInit {
   private ctx = signal<CanvasRenderingContext2D | null>(null);
   private drawing = signal<boolean>(false);
 
-  private selectedTool = signal<toolType>('free-hand');
+  protected selectedTool = signal<toolType>('free-hand');
+  protected selectedColor = signal<string>('#000000');
+
+  constructor() {
+    effect(() => {
+      const _selectedColor = this.selectedColor();
+      untracked(() => {
+        const ctx = this.ctx();
+        if (ctx) {
+          ctx!.strokeStyle = this.selectedColor();
+          ctx!.fillStyle = this.selectedColor();
+        }
+      })
+    });
+  }
 
   ngAfterViewInit(): void {
     const canvas = this.canvas()?.nativeElement;
@@ -35,6 +50,15 @@ export class Canvas3Component implements AfterViewInit {
       // Set canvas resolution based on the device pixel ratio
       canvas.width = width * pixelRatio;
       canvas.height = height * pixelRatio;
+
+      const ctx = this.ctx();
+      if (ctx) {
+        ctx!.strokeStyle = this.selectedColor();
+        ctx!.fillStyle = this.selectedColor();
+        ctx!.lineWidth = 2; // Default line width
+        ctx!.lineCap = 'round'; // Smooth lines
+      }
+
 
       canvas.addEventListener('mousedown', this.startDrawing.bind(this));
       canvas.addEventListener('mousemove', this.draw.bind(this));
@@ -58,7 +82,7 @@ export class Canvas3Component implements AfterViewInit {
     const drawing = this.drawing();
     const ctx = this.ctx();
 
-    if (!drawing ||!ctx) return;
+    if (!drawing || !ctx) return;
 
     const canvas = this.canvas()?.nativeElement;
     if (canvas) {
@@ -69,12 +93,11 @@ export class Canvas3Component implements AfterViewInit {
       ctx.lineWidth = 2;
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
-      ctx.strokeStyle = 'black';
 
       ctx.lineTo(x, y);
       ctx.stroke();
 
-      ctx.beginPath(); // Reset the path
+      ctx.beginPath();
       ctx.moveTo(x, y);
     }
   }

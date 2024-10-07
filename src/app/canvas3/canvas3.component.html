@@ -3,19 +3,13 @@
     <div class="toolbar">
       <div class="tools">
         <p>Shapes: </p>
-        <button type="button" (click)="changeSelectedTool('free-hand')"><mat-icon class="material-symbols-outlined">edit</mat-icon></button>
-        <button type="button" (click)="changeSelectedTool('circle')"><mat-icon class="material-symbols-outlined">radio_button_unchecked</mat-icon></button>
-        <button type="button" (click)="changeSelectedTool('rectangle')"><mat-icon class="material-symbols-outlined">crop_square</mat-icon></button>
-        <!-- <button type="button"><mat-icon class="material-symbols-outlined">diagonal_line</mat-icon></button>
-        <button type="button"><mat-icon class="material-symbols-outlined">line_curve</mat-icon></button> -->
+        <button type="button" [ngClass]="{'active-tool': selectedTool() == 'free-hand'}" (click)="changeSelectedTool('free-hand')"><mat-icon class="material-symbols-outlined">edit</mat-icon></button>
+        <button type="button" [ngClass]="{'active-tool': selectedTool() == 'circle'}" (click)="changeSelectedTool('circle')"><mat-icon class="material-symbols-outlined">radio_button_unchecked</mat-icon></button>
+        <button type="button" [ngClass]="{'active-tool': selectedTool() == 'rectangle'}" (click)="changeSelectedTool('rectangle')"><mat-icon class="material-symbols-outlined">crop_square</mat-icon></button>
       </div>
-      <div class="tools">
+      <div class="tools color">
         <p>Colour: </p>
-        <button type="button" (click)="changeSelectedTool('free-hand')"><mat-icon class="material-symbols-outlined">edit</mat-icon></button>
-        <button type="button" (click)="changeSelectedTool('circle')"><mat-icon class="material-symbols-outlined">radio_button_unchecked</mat-icon></button>
-        <button type="button" (click)="changeSelectedTool('rectangle')"><mat-icon class="material-symbols-outlined">crop_square</mat-icon></button>
-        <!-- <button type="button"><mat-icon class="material-symbols-outlined">diagonal_line</mat-icon></button>
-        <button type="button"><mat-icon class="material-symbols-outlined">line_curve</mat-icon></button> -->
+        <input [(colorPicker)]="selectedColor" [style.background]="selectedColor()" readonly/>
       </div>
       <button class="clear-canvas-btn" (click)="clearCanvas()">Clear</button>
     </div>

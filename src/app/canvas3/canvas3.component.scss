@@ -30,6 +30,28 @@
       }
     }
 
+    .color {
+      input {
+        border: 0px;
+        padding: 0px;
+        margin: 0 0 0 10px;
+        height: 20px;
+        width: 20px;
+        cursor: pointer;
+        
+        &:focus-visible {
+          border: 0;
+          outline: none;
+        }
+      }
+    }
+
+    .active-tool {
+      .mat-icon {
+        color: #419dd7;
+      }
+    }
+
     .clear-canvas-btn {
       background: #a4a4a4;
       color: #000000;
