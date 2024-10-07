@@ -1,0 +1,51 @@
+.canvas3-container {
+  position: relative;
+
+  .toolbar {
+    background: #e1e1e1;
+    color: #000000;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 10px;
+    border-radius: 20px 20px 0 0;
+    margin-top: 10px;
+
+    .tools {
+      display: flex;
+      align-items: center;
+
+      p {
+        margin: 0px;
+        padding: 0px;
+        font-size: 16px;
+
+      }
+
+      button {
+        border: 0px;
+        padding: 0px 20px;
+        margin: 0px;
+        background-color: transparent !important;
+        border-right: 1px solid #545454;
+      }
+    }
+
+    .clear-canvas-btn {
+      background: #a4a4a4;
+      color: #000000;
+      padding: 1px 7px;
+      border: 0px;
+      border-radius: 10px;
+
+      &:hover {
+        background: #fbd2d2;
+        color: #ff5454;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .canvas3 {
+    height: calc(100vh - 116px) !important;
+  }
+}

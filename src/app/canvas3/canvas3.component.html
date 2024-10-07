@@ -1,1 +1,24 @@
-<p>canvas3 works!</p>
+<div class="container-custom">
+  <div class="canvas3-container">
+    <div class="toolbar">
+      <div class="tools">
+        <p>Shapes: </p>
+        <button type="button" (click)="changeSelectedTool('free-hand')"><mat-icon class="material-symbols-outlined">edit</mat-icon></button>
+        <button type="button" (click)="changeSelectedTool('circle')"><mat-icon class="material-symbols-outlined">radio_button_unchecked</mat-icon></button>
+        <button type="button" (click)="changeSelectedTool('rectangle')"><mat-icon class="material-symbols-outlined">crop_square</mat-icon></button>
+        <!-- <button type="button"><mat-icon class="material-symbols-outlined">diagonal_line</mat-icon></button>
+        <button type="button"><mat-icon class="material-symbols-outlined">line_curve</mat-icon></button> -->
+      </div>
+      <div class="tools">
+        <p>Colour: </p>
+        <button type="button" (click)="changeSelectedTool('free-hand')"><mat-icon class="material-symbols-outlined">edit</mat-icon></button>
+        <button type="button" (click)="changeSelectedTool('circle')"><mat-icon class="material-symbols-outlined">radio_button_unchecked</mat-icon></button>
+        <button type="button" (click)="changeSelectedTool('rectangle')"><mat-icon class="material-symbols-outlined">crop_square</mat-icon></button>
+        <!-- <button type="button"><mat-icon class="material-symbols-outlined">diagonal_line</mat-icon></button>
+        <button type="button"><mat-icon class="material-symbols-outlined">line_curve</mat-icon></button> -->
+      </div>
+      <button class="clear-canvas-btn" (click)="clearCanvas()">Clear</button>
+    </div>
+    <canvas id="canvas3" #canvas3 class="canvas canvas3"></canvas>
+  </div>
+</div>

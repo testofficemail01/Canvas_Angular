@@ -9,6 +9,7 @@
 
 .container-custom {
   margin: 0 40px;
+  width: 95%;
 }
 
 .canvas {
@@ -16,3 +17,6 @@
   height: calc(100vh - 62px);
   border:1px solid #000000;
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
