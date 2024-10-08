@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, ElementRef, signal, viewChild } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, inject, PLATFORM_ID, signal, viewChild } from '@angular/core';
 
 @Component({
   selector: 'app-canvas2',
@@ -8,13 +9,15 @@ import { AfterViewInit, Component, ElementRef, signal, viewChild } from '@angula
   styleUrl: './canvas2.component.scss'
 })
 export class Canvas2Component implements AfterViewInit {
+  private platformId = inject(PLATFORM_ID)
+
   private canvas = viewChild<ElementRef<HTMLCanvasElement>>('canvas2');
   private ctx = signal<CanvasRenderingContext2D | null>(null);
   private drawing = signal<boolean>(false);
 
   ngAfterViewInit(): void {
     const _canvas = this.canvas()?.nativeElement;
-    if (_canvas) {
+    if (isPlatformBrowser(this.platformId) && _canvas) {
       this.ctx.set(_canvas.getContext('2d'));
 
       // const pixelRatio = window.devicePixelRatio || 1;
