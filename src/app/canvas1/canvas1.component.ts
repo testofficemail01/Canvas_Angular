@@ -28,7 +28,7 @@ export class Canvas1Component {
           canavs.addEventListener('mousedown', this.onMouseDown.bind(this));
           canavs.addEventListener('mousemove', this.onMouseMove.bind(this));
           canavs.addEventListener('mouseup', this.onMouseUp.bind(this));
-          // canavs.addEventListener('mouseleave', this.onMouseUp.bind(this)); // Handle case where mouse leaves the canvas
+          canavs.addEventListener('mouseleave', this.onMouseUp.bind(this)); // Handle case where mouse leaves the canvas
 
         }
       }
@@ -45,22 +45,27 @@ export class Canvas1Component {
     const _width = 400;
     const _height = height - 50;
     if (ctx) {
-      ctx.strokeStyle = '#000';
-      ctx.lineWidth = 2;
       ctx.beginPath()
+      ctx.strokeStyle = '#00000';
+      ctx.lineWidth = 2;
       ctx.moveTo(gap, gap)
+      // ctx.bezierCurveTo(gap, gap, 200, 100, gap, _height);
+      // ctx.bezierCurveTo(gap, _height, 80, 400, _width, _height);
+      // ctx.bezierCurveTo(20, 100, 300, 100, 200, 20);
+      // ctx.bezierCurveTo(200, 20, 200, 100, gap, gap);
       ctx.lineTo(gap, _height)
       ctx.lineTo(_width, _height)
       ctx.lineTo(_width, gap)
       ctx.lineTo(gap, gap)
-      ctx.closePath()
       ctx.stroke();
+      ctx.closePath()
       this.drawCircle(ctx)
     }
   }
 
   private drawLinesToEdges(ctx: CanvasRenderingContext2D): void {
     const canvas = ctx.canvas;
+    let text:TextMetrics;
 
     // edges of the circle
     const leftEdge = this.circle.x - this.circle.radius;
@@ -69,24 +74,75 @@ export class Canvas1Component {
     const bottomEdge = this.circle.y + this.circle.radius;
 
     ctx.strokeStyle = '#00b7ff';
-    ctx.lineWidth = 2;
+    ctx.font="15pt Calibri";
 
+    /* Left edge */
+    // ----- text -----
     ctx.beginPath();
+    ctx.lineWidth = 1;
+    if(this.circle.y-10 > 40) {
+      ctx.strokeText((leftEdge)+'px', leftEdge/2, this.circle.y-10);
+    }
+    else {
+      ctx.strokeText((leftEdge)+'px', leftEdge/2, this.circle.y+20);
+    }
+    ctx.closePath();
+    // ----- line -----
+    ctx.beginPath();
+    ctx.lineWidth = 2;
     ctx.moveTo(leftEdge, this.circle.y);
     ctx.lineTo(0, this.circle.y);
     ctx.stroke();
 
+    /* Right edge */
+    // ----- text -----
     ctx.beginPath();
+    ctx.lineWidth = 1;
+    if(this.circle.y-10 > 40) {
+      ctx.strokeText((canvas.width-rightEdge)+'px', rightEdge+(canvas.width-rightEdge)/2, this.circle.y-10);
+    } else {
+      ctx.strokeText((canvas.width-rightEdge)+'px', rightEdge+(canvas.width-rightEdge)/2, this.circle.y+20);
+    }
+    ctx.closePath();
+    // ----- line -----
+    ctx.beginPath();
+    ctx.lineWidth = 2;
     ctx.moveTo(rightEdge, this.circle.y);
     ctx.lineTo(canvas.width, this.circle.y);
     ctx.stroke();
 
+    /* Top edge */
+    // ----- text -----
     ctx.beginPath();
+    ctx.lineWidth = 1;
+    text = ctx.measureText(topEdge+'px');
+    if(leftEdge-text.width/2 >= text.width) {
+      ctx.strokeText(topEdge+'px', leftEdge-text.width/2, this.circle.y/2);
+    } else {
+      ctx.strokeText(topEdge+'px', rightEdge-this.circle.radius+5, this.circle.y/2);
+    }
+    ctx.closePath();
+    // ----- line -----
+    ctx.beginPath();
+    ctx.lineWidth = 2;
     ctx.moveTo(this.circle.x, topEdge);
     ctx.lineTo(this.circle.x, 0);
     ctx.stroke();
 
+    /* Bottom edge */
+    // ----- text -----
     ctx.beginPath();
+    ctx.lineWidth = 1;
+    text = ctx.measureText((canvas.height-bottomEdge)+'px');
+    if(leftEdge-text.width/2 >= text.width) {
+      ctx.strokeText((canvas.height-bottomEdge)+'px', leftEdge-text.width/2, bottomEdge+(canvas.height-bottomEdge)/2);
+    } else {
+      ctx.strokeText((canvas.height-bottomEdge)+'px', rightEdge-this.circle.radius+5, bottomEdge+(canvas.height-bottomEdge)/2);
+    }
+    ctx.closePath();
+    // ----- line -----
+    ctx.beginPath();
+    ctx.lineWidth = 2;
     ctx.moveTo(this.circle.x, bottomEdge);
     ctx.lineTo(this.circle.x, canvas.height);
     ctx.stroke();
