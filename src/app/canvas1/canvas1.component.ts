@@ -9,10 +9,11 @@ import { afterNextRender, Component, ElementRef, inject, OnInit, PLATFORM_ID, si
   styleUrl: './canvas1.component.scss'
 })
 export class Canvas1Component {
-
+  private platformId = inject(PLATFORM_ID)
   private document = inject(DOCUMENT);
   private canvasElement = viewChild<ElementRef>('canvas');
   private isDragging = signal<boolean>(false);
+  private bufferCanvas!: HTMLCanvasElement;
 
   private circle = { x: 95, y: 150, radius: 30 }; // Circle properties
   private offset = { x: 0, y: 0 }; // Offset for dragging
@@ -20,16 +21,24 @@ export class Canvas1Component {
   constructor() {
     afterNextRender(() => {
       const canvasElement = this.canvasElement()
+
+
       if (canvasElement) {
         const canavs: HTMLCanvasElement = canvasElement.nativeElement;
         if (canavs) {
           this.canvasInit(canavs);
 
+          // Set up an off-screen canvas to store the original drawing
+          this.bufferCanvas = this.document.createElement('canvas');
+          this.bufferCanvas.width = canavs.width;
+          this.bufferCanvas.height = canavs.height;
+
+          this.bufferCanvas.style.backgroundColor='red';
+
           canavs.addEventListener('mousedown', this.onMouseDown.bind(this));
           canavs.addEventListener('mousemove', this.onMouseMove.bind(this));
           canavs.addEventListener('mouseup', this.onMouseUp.bind(this));
           canavs.addEventListener('mouseleave', this.onMouseUp.bind(this)); // Handle case where mouse leaves the canvas
-
         }
       }
     })
@@ -59,13 +68,18 @@ export class Canvas1Component {
       ctx.lineTo(gap, gap)
       ctx.stroke();
       ctx.closePath()
-      this.drawCircle(ctx)
+      this.drawCircle(ctx);
+
+      const bufferCtx = this.bufferCanvas && this.bufferCanvas.getContext('2d');
+      this.bufferCanvas && console.log(this.bufferCanvas && this.bufferCanvas.getContext('2d'));
+      
+      bufferCtx && bufferCtx.drawImage(this.bufferCanvas, 0, 0);
     }
   }
 
   private drawLinesToEdges(ctx: CanvasRenderingContext2D): void {
     const canvas = ctx.canvas;
-    let text:TextMetrics;
+    let text: TextMetrics;
 
     // edges of the circle
     const leftEdge = this.circle.x - this.circle.radius;
@@ -74,17 +88,17 @@ export class Canvas1Component {
     const bottomEdge = this.circle.y + this.circle.radius;
 
     ctx.strokeStyle = '#00b7ff';
-    ctx.font="15pt Calibri";
+    ctx.font = "15pt Calibri";
 
     /* Left edge */
     // ----- text -----
     ctx.beginPath();
     ctx.lineWidth = 1;
-    if(this.circle.y-10 > 40) {
-      ctx.strokeText((leftEdge)+'px', leftEdge/2, this.circle.y-10);
+    if (this.circle.y - 10 > 40) {
+      ctx.strokeText((leftEdge) + 'px', leftEdge / 2, this.circle.y - 10);
     }
     else {
-      ctx.strokeText((leftEdge)+'px', leftEdge/2, this.circle.y+20);
+      ctx.strokeText((leftEdge) + 'px', leftEdge / 2, this.circle.y + 20);
     }
     ctx.closePath();
     // ----- line -----
@@ -98,10 +112,10 @@ export class Canvas1Component {
     // ----- text -----
     ctx.beginPath();
     ctx.lineWidth = 1;
-    if(this.circle.y-10 > 40) {
-      ctx.strokeText((canvas.width-rightEdge)+'px', rightEdge+(canvas.width-rightEdge)/2, this.circle.y-10);
+    if (this.circle.y - 10 > 40) {
+      ctx.strokeText((canvas.width - rightEdge) + 'px', rightEdge + (canvas.width - rightEdge) / 2, this.circle.y - 10);
     } else {
-      ctx.strokeText((canvas.width-rightEdge)+'px', rightEdge+(canvas.width-rightEdge)/2, this.circle.y+20);
+      ctx.strokeText((canvas.width - rightEdge) + 'px', rightEdge + (canvas.width - rightEdge) / 2, this.circle.y + 20);
     }
     ctx.closePath();
     // ----- line -----
@@ -115,11 +129,11 @@ export class Canvas1Component {
     // ----- text -----
     ctx.beginPath();
     ctx.lineWidth = 1;
-    text = ctx.measureText(topEdge+'px');
-    if(leftEdge-text.width/2 >= text.width) {
-      ctx.strokeText(topEdge+'px', leftEdge-text.width/2, this.circle.y/2);
+    text = ctx.measureText(topEdge + 'px');
+    if (leftEdge - text.width / 2 >= text.width) {
+      ctx.strokeText(topEdge + 'px', leftEdge - text.width / 2, this.circle.y / 2);
     } else {
-      ctx.strokeText(topEdge+'px', rightEdge-this.circle.radius+5, this.circle.y/2);
+      ctx.strokeText(topEdge + 'px', rightEdge - this.circle.radius + 5, this.circle.y / 2);
     }
     ctx.closePath();
     // ----- line -----
@@ -133,11 +147,11 @@ export class Canvas1Component {
     // ----- text -----
     ctx.beginPath();
     ctx.lineWidth = 1;
-    text = ctx.measureText((canvas.height-bottomEdge)+'px');
-    if(leftEdge-text.width/2 >= text.width) {
-      ctx.strokeText((canvas.height-bottomEdge)+'px', leftEdge-text.width/2, bottomEdge+(canvas.height-bottomEdge)/2);
+    text = ctx.measureText((canvas.height - bottomEdge) + 'px');
+    if (leftEdge - text.width / 2 >= text.width) {
+      ctx.strokeText((canvas.height - bottomEdge) + 'px', leftEdge - text.width / 2, bottomEdge + (canvas.height - bottomEdge) / 2);
     } else {
-      ctx.strokeText((canvas.height-bottomEdge)+'px', rightEdge-this.circle.radius+5, bottomEdge+(canvas.height-bottomEdge)/2);
+      ctx.strokeText((canvas.height - bottomEdge) + 'px', rightEdge - this.circle.radius + 5, bottomEdge + (canvas.height - bottomEdge) / 2);
     }
     ctx.closePath();
     // ----- line -----
@@ -150,7 +164,7 @@ export class Canvas1Component {
 
 
   private drawCircle(ctx: CanvasRenderingContext2D): void {
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // Clear canvas before drawing
+    // ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // Clear canvas before drawing
 
     ctx.beginPath();
     ctx.fillStyle = 'green';
@@ -174,6 +188,9 @@ export class Canvas1Component {
   }
   onMouseMove(event: MouseEvent) {
     if (this.isDragging()) {
+      // const previousX = this.circle.x;
+      // const previousY = this.circle.y;
+
       const { offsetX, offsetY } = event;
       // Update circle position
       this.circle.x = offsetX - this.offset.x;
@@ -187,9 +204,32 @@ export class Canvas1Component {
           ctx && this.drawCircle(ctx);
         }
       }
+      // this.redrawShape(previousX, previousY);
     }
   }
   onMouseUp(event: MouseEvent) {
     this.isDragging.set(false);
   }
+
+  // redrawShape( previousX: number, previousY: number) {
+  //   // Erase the shape from the previous position
+  //   const bufferCtx = this.bufferCanvas.getContext('2d')!;
+  //   // bufferCtx.clearRect(previousX, previousY, this.circle.radius, this.circle.radius);
+
+  //   // Draw the shape at the new position on the buffer canvas
+  //   bufferCtx.beginPath();
+  //   bufferCtx.fillStyle = 'green';
+  //   bufferCtx.arc(this.circle.x, this.circle.y, this.circle.radius, 0, 2 * Math.PI);
+  //   bufferCtx.fill();
+
+  //   const canvasElement = this.canvasElement()
+  //   const canvas: HTMLCanvasElement = canvasElement && canvasElement.nativeElement;
+  //   if (canvas) {
+  //     const ctx = canvas.getContext('2d');
+  //   ctx && this.drawLinesToEdges(ctx)
+  //     // Copy buffer canvas to visible canvas
+  //     ctx && ctx.clearRect(0, 0, canvas.width, canvas.height);
+  //     ctx && ctx.drawImage(this.bufferCanvas, 0, 0);
+  //   }
+  // }
 }
