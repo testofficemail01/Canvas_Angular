@@ -164,7 +164,7 @@ export class Canvas1Component {
 
 
   private drawCircle(ctx: CanvasRenderingContext2D): void {
-    // ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // Clear canvas before drawing
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // Clear canvas before drawing
 
     ctx.beginPath();
     ctx.fillStyle = 'green';
